@@ -1,0 +1,94 @@
+# Copyright (c) 2026 Zar - Zaynr-Ecosystem
+site_name: Zaynr-Ecosystem
+site_url: https://zaynr-ecosystem.github.io/
+site_description: Public documentation for Zelly's Guard, Zelly's Nexus, BlockProt Reloaded and the HollowKraft community server.
+repo_url: https://github.com/Zaynr-Ecosystem/Zaynr-Ecosystem.github.io
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  font: false
+  features:
+    - navigation.top
+    - navigation.footer
+    - navigation.sections
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+
+plugins:
+  - search
+  - i18n:
+      docs_structure: suffix
+      fallback_to_default: true
+      reconfigure_material: true
+      reconfigure_search: true
+      languages:
+        - locale: en
+          default: true
+          name: English
+        - locale: es
+          name: Español
+          nav_translations:
+            Home: Inicio
+            Releases: Versiones
+            About: Acerca de
+            Overview: Resumen
+            Commands: Comandos
+            Configuration: Configuración
+            Modules: Módulos
+          admonition_translations:
+            note: Nota
+            info: Información
+            tip: Consejo
+            warning: Aviso
+
+extra_css:
+  - stylesheets/extra.css
+
+nav:
+  - Home: index.md
+  - Zelly's Guard:
+      - Overview: guard/index.md
+      - Commands: guard/commands.md
+      - Configuration: guard/configuration.md
+  - Zelly's Nexus:
+      - Overview: nexus/index.md
+      - Commands: nexus/commands.md
+      - Modules: nexus/modules.md
+      - Configuration: nexus/configuration.md
+  - BlockProt Reloaded:
+      - Overview: blockprot/index.md
+      - Commands: blockprot/commands.md
+      - Configuration: blockprot/configuration.md
+  - HollowKraft: hollowkraft.md
+  - Releases: releases.md
+  - About: about.md
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - tables
+  - toc:
+      permalink: true
+
+copyright: Copyright &copy; 2026 Zar - Zaynr-Ecosystem
