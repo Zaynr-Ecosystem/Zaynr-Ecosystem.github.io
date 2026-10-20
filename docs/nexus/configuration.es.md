@@ -1,56 +1,71 @@
 # Configuración
 
-La configuración global está en `config.yml`, en la carpeta de datos del plugin; la
-configuración por módulo está en `modules/<module>.yml`. `/zn reload` aplica los cambios
-de idioma y de diálogos de inmediato; los interruptores de módulos necesitan un reinicio
-completo del servidor. Cuando una clave se procesa pero su módulo aún no la usa, la
-tabla la marca como aún sin aplicar.
+La configuración global está en `config.yml`. Cada módulo tiene su propia carpeta,
+`modules/<module>/config.yml`, y empieza con `enabled: false`. `/zn reload` aplica los
+cambios de idioma y de renderizador de inmediato; los interruptores de módulos necesitan
+un reinicio completo del servidor. Cuando una clave se procesa pero su módulo aún no la
+usa, la tabla la marca como aún sin aplicar. Los hubs de jugador son `/zn user` y
+`/zn admin`; cada pantalla usa el renderizador que eligen `use_dialogs` y
+`bedrock_forms`.
 
 ## config.yml
 
 | Clave | Por defecto | Notas |
 |---|---|---|
-| `config-version` | `2` | Versión del esquema de configuración; se actualiza automáticamente |
+| `config-version` | `3` | Versión del esquema; se actualiza automáticamente |
 | `language` | `en` | Traducción activa: `en` o `es` |
-| `dialogs` | `true` | Diálogos nativos de Paper; `false` recurre a la interfaz de chat |
+| `use_dialogs` | `false` | Los jugadores de Java ven diálogos de Paper en lugar de inventarios. Requiere una build de Paper con la API de diálogos |
+| `bedrock_forms` | `true` | Los jugadores de Bedrock ven formularios de Floodgate cuando Floodgate está instalado |
+| `setup_notice` | `true` | Los administradores ven el aviso de primera configuración hasta que se aplica la configuración recomendada o esta clave es `false` |
+| `apply_recommended_on_start` | `false` | Aplica `recommended all` en el siguiente arranque y luego vuelve a `false` |
+| `admin_tiers.enabled` | `false` | Separa las capacidades de administración por nivel. En `false`, `zn.admin` concede todas |
 | `commands.register-root-aliases` | `true` | Registra los atajos de raíz opcionales (`/spawn`, `/home`, `/login` y más) |
-| `commands.disabled-root-aliases` | `[kill, kick, time, weather, msg, gamemode]` | Nombres de comandos raíz que nunca se registran |
-| `updater.check-on-boot` | `true` | Ejecuta la comprobación de actualizaciones al arrancar |
+| `commands.disabled-root-aliases` | `[kill, kick, time, weather, msg, gamemode]` | Comandos de raíz que nunca se registran |
+| `updater.check-on-boot` | `true` | Comprueba actualizaciones al arrancar |
+| `recommended_config_applied` | ausente | Marca que se escribe cuando `recommended config` termina bien |
+| `recommended_modules_applied` | ausente | Marca que se escribe cuando `recommended modules` termina bien |
+| `recommended_<module>_applied` | ausente | Marca que se escribe cuando `recommended <module>` termina bien |
+
+Los inventarios son el renderizador por defecto. `use_dialogs: true` cambia a los
+jugadores de Java a diálogos; los de Bedrock reciben formularios cuando Floodgate está
+presente y `bedrock_forms` es `true`. Las claves antiguas `dialogs` y `gui-mode` se
+migran a `use_dialogs` y se eliminan en el primer arranque de esta versión.
 
 ### Interruptores de módulos
 
 | Clave | Por defecto |
 |---|---|
-| `modules.auth.enabled` | `true` |
-| `modules.antibot.enabled` | `true` |
-| `modules.toolkit.enabled` | `true` |
-| `modules.ban.enabled` | `true` |
-| `modules.join.enabled` | `true` |
-| `modules.chat.enabled` | `true` |
-| `modules.inventory.enabled` | `true` |
-| `modules.clans.enabled` | `true` |
-| `modules.itemedit.enabled` | `true` |
-| `modules.tab.enabled` | `true` |
-| `modules.integrations.enabled` | `true` |
-| `modules.updater.enabled` | `true` |
-| `modules.debug.enabled` | `false` |
+| `enabled` en `modules/auth/config.yml` | `false` |
+| `enabled` en `modules/antibot/config.yml` | `false` |
+| `enabled` en `modules/toolkit/config.yml` | `false` |
+| `enabled` en `modules/ban/config.yml` | `false` |
+| `enabled` en `modules/join/config.yml` | `false` |
+| `enabled` en `modules/chat/config.yml` | `false` |
+| `enabled` en `modules/inventory/config.yml` | `false` |
+| `enabled` en `modules/clans/config.yml` | `false` |
+| `enabled` en `modules/itemedit/config.yml` | `false` |
+| `enabled` en `modules/tab/config.yml` | `false` |
+| `enabled` en `modules/integrations/config.yml` | `false` |
+| `enabled` en `modules/updater/config.yml` | `false` |
+| `enabled` en `modules/debug/config.yml` | `false` |
 
-Los interruptores surten efecto solo tras un reinicio completo del servidor. Los nombres
-de módulos desconocidos quedan activados por defecto, y `debug` queda desactivado por
-defecto.
+Los interruptores solo se aplican tras un reinicio completo. Un módulo desactivado
+sigue registrando sus comandos; al usarlos, el plugin explica que está desactivado y
+muestra las dos salidas (editar su carpeta o ejecutar `/zn recommended <module>`).
 
-## modules/auth.yml
+## modules/auth/config.yml
 
 | Clave | Por defecto | Notas |
 |---|---|---|
-| `session-hours` | `12` | Duración de la memoria de sesión |
-| `max-accounts-per-ip` | `3` | Límite de cuentas por dirección |
-| `min-password-length` | `4` | Longitud mínima de la contraseña |
-| `max-password-length` | `64` | Longitud máxima de la contraseña |
+| `enabled` | `false` | Interruptor del módulo; requiere reinicio |
+| `session-hours` | `12` | Duración de la sesión recordada |
+| `max-accounts-per-ip` | `3` | Cuentas permitidas por dirección |
+| `min-password-length` | `4` | Longitud mínima de contraseña |
+| `max-password-length` | `64` | Longitud máxima de contraseña |
 | `max-failed-attempts` | `5` | Intentos fallidos antes del bloqueo |
 | `lockout-seconds` | `60` | Duración del bloqueo |
-| `otp-expiry-seconds` | `300` | Validez de la contraseña de un solo uso |
-| `form-delay-ticks` | `20` | Retardo antes de que se abra el formulario de auth |
+| `otp-expiry-seconds` | `300` | Validez de las contraseñas de un solo uso |
+| `form-delay-ticks` | `20` | Retardo antes de abrir el formulario de acceso |
 | `auto-login-bedrock` | `true` | Aún sin aplicar |
 | `auto-login-premium` | `false` | Aún sin aplicar |
 | `login-timeout-seconds` | `60` | Aún sin aplicar |
@@ -59,14 +74,15 @@ defecto.
 | `security-effects.invulnerability` | `true` | Aún sin aplicar |
 | `security-effects.mute-chat` | `true` | Aún sin aplicar |
 | `allowed-commands` | `[/login, /register, /l, /reg]` | Aún sin aplicar |
-| `mojang.timeout-seconds` | `4` | Tiempo de espera de la verificación premium |
-| `mojang.cache-seconds` | `3600` | Caché de la verificación premium |
+| `mojang.timeout-seconds` | `4` | Tiempo máximo de verificación premium |
+| `mojang.cache-seconds` | `3600` | Caché de verificación premium |
 
-## modules/antibot.yml
+## modules/antibot/config.yml
 
 | Clave | Por defecto | Notas |
 |---|---|---|
-| `window-seconds` | `10` | Ventana del límite de tasa por dirección |
+| `enabled` | `false` | Interruptor del módulo; requiere reinicio |
+| `window-seconds` | `10` | Ventana del límite por dirección |
 | `max-joins-per-window` | `4` | Conexiones permitidas por ventana |
 | `attack-mode.auto-enable` | `true` | Aún sin aplicar |
 | `attack-mode.threshold` | `8` | Aún sin aplicar |
@@ -74,134 +90,159 @@ defecto.
 | `checks.require-ping` | `false` | Aún sin aplicar |
 | `checks.alert-staff` | `true` | Aún sin aplicar |
 
-## modules/toolkit.yml
+## modules/toolkit/config.yml
 
 | Clave | Por defecto | Notas |
 |---|---|---|
-| `near-radius` | `100` | Radio de la lista de jugadores "near" |
-| `burn-ticks` | `100` | Duración de la quemadura aplicada por la acción burn |
-| `tpa-timeout-seconds` | `120` | Tiempo de espera de las solicitudes de teletransporte |
+| `enabled` | `false` | Interruptor del módulo; requiere reinicio |
+| `near-radius` | `100` | Radio de la lista de jugadores cercanos |
+| `burn-ticks` | `100` | Duración del efecto de quemadura |
+| `tpa-timeout-seconds` | `120` | Tiempo máximo de una solicitud de teletransporte |
 | `teleport.warmup-seconds` | `3` | Aún sin aplicar |
 | `teleport.cancel-on-move` | `true` | Aún sin aplicar |
 | `teleport.cancel-on-damage` | `true` | Aún sin aplicar |
 | `homes.default-max-homes` | `3` | Aún sin aplicar |
-| `homes.bed-sets-home` | `false` | Aún sin aplicar |
 | `spawn.on-first-join` | `true` | Aún sin aplicar |
 | `spawn.on-death` | `false` | Aún sin aplicar |
 | `back.save-on-death` | `true` | Aún sin aplicar |
 | `back.cooldown-seconds` | `10` | Aún sin aplicar |
-| `rtp.rtp-min` | `-1000` | Aún sin aplicar; el rango se cambia en tiempo de ejecución con `/settpr` |
-| `rtp.rtp-max` | `1000` | Aún sin aplicar; el rango se cambia en tiempo de ejecución con `/settpr` |
+| `rtp.rtp-min` | `-1000` | Aún sin aplicar; el rango se cambia con `/settpr` |
+| `rtp.rtp-max` | `1000` | Aún sin aplicar; el rango se cambia con `/settpr` |
 | `rtp.cooldown-seconds` | `60` | Aún sin aplicar |
-| `rtp.avoid-water` | `true` | Aún sin aplicar |
-| `rtp.avoid-lava` | `true` | Aún sin aplicar |
-| `pranks.enabled` | `true` | Aún sin aplicar |
-| `pranks.level-1` a `pranks.level-6` | texto de política | Aún sin aplicar |
 
-## modules/ban.yml
+## modules/ban/config.yml
 
 | Clave | Por defecto | Notas |
 |---|---|---|
-| `server-name` | `"the server"` | Nombre que se muestra en las pantallas de ban, expulsión y suspensión |
-| `default-suspend-duration` | `"7d"` | Duración aplicada por `/zn suspend` cuando no se indica ninguna (`s`, `m`, `h`, `d`, `w` o `perm`) |
-| `screens` | `true` | Muestra las pantallas de ban, expulsión y suspensión al rechazar el inicio de sesión y en las expulsiones |
-| `date-format` | `"yyyy-MM-dd HH:mm"` | Formato de fecha usado en las pantallas |
-| `help-url` | sitio de documentación | Enlace mostrado en las pantallas |
-| `appeal-url` | sitio de documentación | Enlace mostrado en las pantallas |
-| `store-url` | sitio de documentación | Enlace mostrado en las pantallas |
+| `enabled` | `false` | Interruptor del módulo; requiere reinicio |
+| `server-name` | `"the server"` | Nombre que aparece en las pantallas de sanción |
+| `default-suspend-duration` | `"7d"` | Duración de `/zn suspend` cuando no se indica (`s`, `m`, `h`, `d`, `w` o `perm`) |
+| `screens` | `true` | Muestra las pantallas de expulsión y sanción |
+| `date-format` | `"yyyy-MM-dd HH:mm"` | Formato de fecha de las pantallas |
+| `help-url` | sitio de documentación | Enlace de ayuda |
+| `appeal-url` | sitio de documentación | Enlace de apelación |
+| `store-url` | sitio de documentación | Enlace de tienda |
 
-## modules/join.yml
+## modules/join/config.yml
 
 | Clave | Por defecto | Notas |
 |---|---|---|
-| `title-fade` | `10 / 80 / 10` ticks | Entrada, permanencia y salida por defecto de los títulos |
-| `chat.enabled` | `true` | Mensajes de chat de primera entrada, entrada y salida |
-| `chat.public.<event>` / `chat.private.<event>` | entradas | El público llega a todos los jugadores en línea, el privado solo al jugador |
-| `title.enabled` | `false` | Títulos de pantalla |
-| `title.public.<event>` / `title.private.<event>` | entradas | Entradas de título y subtítulo |
-| `actionbar.enabled` | `false` | Líneas de la barra de acción |
-| `actionbar.public.<event>` / `actionbar.private.<event>` | entradas | Entradas de una sola línea |
+| `enabled` | `false` | Interruptor del módulo; requiere reinicio |
+| `title-fade.fade-in` | `10` | Entrada del título, en ticks |
+| `title-fade.stay` | `80` | Permanencia del título, en ticks |
+| `title-fade.fade-out` | `10` | Salida del título, en ticks |
+| `chat.enabled` | `true` | Mensajes de primera entrada, entrada y salida |
+| `chat.public.first-join` | 1 entrada | Lista pública para `first-join` |
+| `chat.public.join` | 1 entrada | Lista pública para `join` |
+| `chat.public.quit` | 1 entrada | Lista pública para `quit` |
+| `chat.private.first-join` | `[]` | Lista privada para `first-join` |
+| `chat.private.join` | `[]` | Lista privada para `join` |
+| `chat.private.quit` | `[]` | Lista privada para `quit` |
+| `title.enabled` | `false` | Títulos en pantalla |
+| `title.public.first-join` | `[]` | Título público para `first-join` |
+| `title.public.join` | `[]` | Título público para `join` |
+| `title.public.quit` | `[]` | Título público para `quit` |
+| `title.private.first-join` | `[]` | Título privado para `first-join` |
+| `title.private.join` | `[]` | Título privado para `join` |
+| `title.private.quit` | `[]` | Título privado para `quit` |
+| `actionbar.enabled` | `false` | Líneas de action bar |
+| `actionbar.public.first-join` | `[]` | Action bar pública para `first-join` |
+| `actionbar.public.join` | `[]` | Action bar pública para `join` |
+| `actionbar.public.quit` | `[]` | Action bar pública para `quit` |
+| `actionbar.private.first-join` | `[]` | Action bar privada para `first-join` |
+| `actionbar.private.join` | `[]` | Action bar privada para `join` |
+| `actionbar.private.quit` | `[]` | Action bar privada para `quit` |
 | `sound.enabled` | `false` | Sonidos de entrada y salida |
-| `sound.public.<event>` / `sound.private.<event>` | entradas | Entradas de sonido |
+| `sound.public.first-join` | `[]` | Sonido público para `first-join` |
+| `sound.public.join` | `[]` | Sonido público para `join` |
+| `sound.public.quit` | `[]` | Sonido público para `quit` |
+| `sound.private.first-join` | `[]` | Sonido privado para `first-join` |
+| `sound.private.join` | `[]` | Sonido privado para `join` |
+| `sound.private.quit` | `[]` | Sonido privado para `quit` |
 
-`<event>` es `first-join`, `join` o `quit`. Cada entrada establece una `priority` y
-puede establecer una `permission` opcional; las entradas de mensaje usan `messages` (una
-lista), las de título usan `title` y `subtitle`, y las de sonido usan `sound`, `volume`
-y `pitch`. Marcadores: `<player>`, `<displayname>`, `<world>`, `<online>` y
-`<uniquejoins>` (el contador que se guarda en `join-stats.yml`).
+`<event>` es `first-join`, `join` o `quit`. Cada entrada define `priority` y puede
+definir `permission`; los mensajes usan `messages` (lista), los títulos usan `title` y
+`subtitle`, y los sonidos usan `sound`, `volume` y `pitch`. Marcadores: `<player>`,
+`<displayname>`, `<world>`, `<online>` y `<uniquejoins>` (el contador de
+`join-stats.yml`).
 
-## modules/chat.yml
+## modules/chat/config.yml
 
 ### Canales
 
 | Clave | Por defecto | Notas |
 |---|---|---|
-| `enabled` | `true` | Aún sin aplicar; usa `modules.chat.enabled` |
-| `channels.default-channel` | `local` | Canal por defecto para los jugadores |
+| `enabled` | `false` | Interruptor del módulo; requiere reinicio |
+| `channels.default-channel` | `local` | Canal por defecto |
 | `channels.local-radius` | `100` | Radio del chat local |
-| `channels.shout-prefix` | `!` | Prefijo que envía un mensaje a todo el servidor |
-| `channels.shout-permission` | `zn.chat.shout` | Aún sin aplicar; el permiso está fijado en `zn.chat.shout` |
+| `channels.shout-prefix` | `!` | Prefijo que envía al servidor entero |
+| `channels.shout-permission` | `zn.chat.shout` | Aún sin aplicar; el permiso es fijo |
 
 ### Formato
 
 | Clave | Por defecto | Notas |
 |---|---|---|
-| `formatting.local-format` | prefijo/nombre/sufijo en gris `[L]`: mensaje | Formato MiniMessage para el chat local |
-| `formatting.global-format` | prefijo/nombre/sufijo en dorado `[G]`: mensaje | Formato MiniMessage para el chat global |
-| `formatting.player-hover` | 6 líneas (nombre, rango, ping, mundo, en blanco, sugerencia) | Tooltip en los nombres de los jugadores |
-| `formatting.player-click.action` | `SUGGEST_COMMAND` | Acción de clic en los nombres de los jugadores |
-| `formatting.player-click.value` | `/msg <player>` | Valor de la acción de clic |
+| `formatting.local-format` | gris `[L]` prefijo/nombre/sufijo: mensaje | Formato MiniMessage local |
+| `formatting.global-format` | dorado `[G]` prefijo/nombre/sufijo: mensaje | Formato MiniMessage global |
+| `formatting.player-hover` | 6 líneas | Información al pasar el ratón |
+| `formatting.player-click.action` | `SUGGEST_COMMAND` | Acción al hacer clic |
+| `formatting.player-click.value` | `/msg <player>` | Valor de la acción |
 | `formatting.groups.admin.priority` | `100` | Prioridad del grupo |
 | `formatting.groups.admin.permission` | `zn.chat.group.admin` | Permiso del grupo |
-| `formatting.groups.admin.local-format` / `global-format` | formatos de admin | Formatos de chat del grupo |
-| `formatting.groups.admin.player-hover` | 6 líneas | Tooltip del grupo |
-| `formatting.groups.admin.player-click.action` / `value` | `SUGGEST_COMMAND` / `/msg <player>` | Acción de clic del grupo |
-| `formatting.groups.mod.priority` / `permission` | `80` / `zn.chat.group.mod` | Grupo mod |
-| `formatting.groups.mod.local-format` / `global-format` | formatos de mod | Formatos del grupo mod |
-| `formatting.groups.vip.priority` / `permission` | `50` / `zn.chat.group.vip` | Grupo VIP |
-| `formatting.groups.vip.local-format` / `global-format` | formatos de VIP | Formatos del grupo VIP |
+| `formatting.groups.admin.local-format` | formato local de admin | Formato local |
+| `formatting.groups.admin.global-format` | formato global de admin | Formato global |
+| `formatting.groups.admin.player-hover` | 6 líneas | Información del grupo |
+| `formatting.groups.admin.player-click.action` | `SUGGEST_COMMAND` | Acción del grupo |
+| `formatting.groups.admin.player-click.value` | `/msg <player> ` | Valor de la acción |
+| `formatting.groups.mod.priority` | `80` | Prioridad del grupo |
+| `formatting.groups.mod.permission` | `zn.chat.group.mod` | Permiso del grupo |
+| `formatting.groups.mod.local-format` | formato local de mod | Formato local |
+| `formatting.groups.mod.global-format` | formato global de mod | Formato global |
+| `formatting.groups.vip.priority` | `50` | Prioridad del grupo |
+| `formatting.groups.vip.permission` | `zn.chat.group.vip` | Permiso del grupo |
+| `formatting.groups.vip.local-format` | formato local de vip | Formato local |
+| `formatting.groups.vip.global-format` | formato global de vip | Formato global |
 
 ### Marcadores
 
 | Clave | Por defecto | Notas |
 |---|---|---|
 | `placeholders.item.enabled` | `true` | `[item]` y `[i]` |
-| `placeholders.item.format` | aqua `[item_name x amount]` | Formato del marcador de objeto |
 | `placeholders.inventory.enabled` | `true` | `[inv]` |
-| `placeholders.inventory.format` | dorado `[Inventory]` | Formato del marcador de inventario |
-| `placeholders.inventory.hover` | Haz clic para inspeccionar el inventario | Texto al pasar el cursor |
-| `placeholders.inventory.command` | `/zn inv see <player>` | Comando de clic |
+| `placeholders.inventory.format` | dorado `[Inventory]` | Formato del marcador |
+| `placeholders.inventory.hover` | Texto al pasar el ratón | Texto de ayuda |
+| `placeholders.inventory.command` | `/zn inv see <player>` | Comando al hacer clic |
 | `placeholders.enderchest.enabled` | `true` | `[ender]` |
-| `placeholders.enderchest.format` | lila claro `[EnderChest]` | Formato del marcador del cofre de ender |
-| `placeholders.enderchest.hover` | Haz clic para inspeccionar el cofre de ender | Texto al pasar el cursor |
-| `placeholders.enderchest.command` | `/zn inv endersee <player>` | Comando de clic |
+| `placeholders.enderchest.format` | lila `[EnderChest]` | Formato del marcador |
+| `placeholders.enderchest.hover` | Texto al pasar el ratón | Texto de ayuda |
+| `placeholders.enderchest.command` | `/zn inv endersee <player>` | Comando al hacer clic |
 
 ### Menciones
 
 | Clave | Por defecto | Notas |
 |---|---|---|
-| `mentions.enabled` | `true` | Menciones a jugadores |
-| `mentions.format` | amarillo en negrita `@target` | Formato de mención |
+| `mentions.enabled` | `true` | Menciones de jugadores |
+| `mentions.format` | amarillo negrita `@target` | Formato de mención |
 | `mentions.sound.enabled` | `true` | Sonido al mencionar |
-| `mentions.sound.type` | `block.note_block.bell` | Tipo de sonido |
-| `mentions.sound.volume` | `1.0` | Volumen del sonido |
-| `mentions.sound.pitch` | `1.5` | Tono del sonido |
-| `mentions.actionbar.enabled` | `true` | Notificación en la barra de acción |
-| `mentions.actionbar.message` | mensaje de mención | Texto de la notificación |
+| `mentions.sound.type` | `block.note_block.bell` | Sonido |
+| `mentions.sound.volume` | `1.0` | Volumen |
+| `mentions.sound.pitch` | `1.5` | Tono |
+| `mentions.actionbar.enabled` | `true` | Aviso en action bar |
+| `mentions.actionbar.message` | mensaje de mención | Texto del aviso |
 
 ### Moderación
 
 | Clave | Por defecto | Notas |
 |---|---|---|
 | `moderation.cooldown-seconds` | `1.5` | Enfriamiento del chat |
-| `moderation.cooldown-bypass-permission` | `zn.chat.bypass.cooldown` | Permiso de omisión |
-| `moderation.anti-duplicate.enabled` | `true` | Bloquea los mensajes repetidos |
-| `moderation.anti-caps.enabled` | `true` | Bloquea el exceso de mayúsculas |
-| `moderation.anti-caps.min-message-length` | `6` | Longitud mínima para la comprobación de mayúsculas |
+| `moderation.cooldown-bypass-permission` | `zn.chat.bypass.cooldown` | Permiso para saltarlo |
+| `moderation.anti-duplicate.enabled` | `true` | Bloquea mensajes repetidos |
+| `moderation.anti-caps.enabled` | `true` | Bloquea mayúsculas excesivas |
+| `moderation.anti-caps.min-message-length` | `6` | Longitud mínima para revisar mayúsculas |
 | `moderation.anti-caps.max-caps-percent` | `60` | Porcentaje máximo de mayúsculas |
-| `moderation.swear-filter.enabled` | `false` | Filtro de palabrotas |
-| `moderation.swear-filter.block-message` | `false` | Bloquea en lugar de censurar |
-| `moderation.swear-filter.censor-replacement` | `****` | Reemplazo al censurar |
+| `moderation.swear-filter.enabled` | `false` | Filtro de palabras |
+| `moderation.swear-filter.block-message` | `false` | Bloquear en lugar de censurar |
+| `moderation.swear-filter.censor-replacement` | `****` | Texto de censura |
 | `moderation.swear-filter.blocked-words` | `[]` | Lista de palabras bloqueadas |
 
 ### Anuncios
@@ -210,41 +251,41 @@ y `pitch`. Marcadores: `<player>`, `<displayname>`, `<world>`, `<online>` y
 |---|---|---|
 | `announcements.enabled` | `false` | Anuncios programados |
 | `announcements.interval-seconds` | `180` | Intervalo entre anuncios |
-| `announcements.prefix` | prefijo de Nexus | Prefijo del anuncio |
+| `announcements.prefix` | prefijo Nexus | Prefijo del anuncio |
 | `announcements.messages` | 3 líneas | Mensajes rotativos |
 
-## modules/clans.yml
+## modules/clans/config.yml
 
 | Clave | Por defecto | Notas |
 |---|---|---|
+| `enabled` | `false` | Interruptor del módulo; requiere reinicio |
 | `invite-seconds` | `120` | Validez de la invitación |
 | `naming.min-name-length` | `3` | Aún sin aplicar |
-| `naming.max-name-length` | `32` | Longitud máxima del nombre del clan |
+| `naming.max-name-length` | `32` | Longitud máxima del nombre |
 | `naming.max-tag-length` | `6` | Aún sin aplicar |
 | `membership.max-members` | `10` | Aún sin aplicar |
 | `membership.creation-cost` | `0` | Aún sin aplicar |
-| `gameplay.friendly-fire-default` | `false` | Estado por defecto del fuego amigo |
+| `gameplay.friendly-fire-default` | `false` | Fuego amigo por defecto |
 | `gameplay.home-warmup-seconds` | `3` | Aún sin aplicar |
 | `gameplay.max-allies` | `3` | Aún sin aplicar |
 | `gameplay.max-rivals` | `5` | Aún sin aplicar |
 
-## modules/inventory.yml
-
-El módulo inventory no tiene archivo de configuración en la carpeta de datos; funciona
-con estos valores por defecto integrados, y ninguno de ellos se aplica aún.
+## modules/inventory/config.yml
 
 | Clave | Por defecto | Notas |
 |---|---|---|
+| `enabled` | `false` | Interruptor del módulo; requiere reinicio |
 | `rollback.save-on-death` | `true` | Aún sin aplicar |
 | `rollback.save-on-disconnect` | `true` | Aún sin aplicar |
 | `rollback.max-snapshots-per-player` | `20` | Aún sin aplicar |
 | `rollback.retention-days` | `7` | Aún sin aplicar |
 | `inspector.allow-modification` | `true` | Aún sin aplicar |
 
-## modules/itemedit.yml
+## modules/itemedit/config.yml
 
 | Clave | Por defecto | Notas |
 |---|---|---|
+| `enabled` | `false` | Interruptor del módulo; requiere reinicio |
 | `lore-lines` | `8` | Líneas máximas de lore |
 | `limits.max-name-length` | `64` | Aún sin aplicar |
 | `limits.max-lore-line-length` | `128` | Aún sin aplicar |
@@ -252,36 +293,59 @@ con estos valores por defecto integrados, y ninguno de ellos se aplica aún.
 | `formatting.allow-minimessage` | `true` | Aún sin aplicar |
 | `economy.repair-cost` | `0` | Aún sin aplicar |
 
-## modules/tab.yml
+## modules/tab/config.yml
 
 | Clave | Por defecto | Notas |
 |---|---|---|
-| `tablist.enabled` | `true` | Aún sin aplicar; usa `modules.tab.enabled` |
+| `enabled` | `false` | Interruptor del módulo; requiere reinicio |
+| `tablist.enabled` | `true` | Aún sin aplicar |
 | `tablist.update-interval-ticks` | `20` | Aún sin aplicar |
 | `tablist.colorize-ping` | `true` | Aún sin aplicar |
-| `tablist.header` | 2 líneas | Aún sin aplicar; el encabezado proviene de claves de traducción |
-| `tablist.footer` | 2 líneas | Aún sin aplicar; el pie proviene de claves de traducción |
-| `bossbar.duration-ticks` | `200` | Duración de la boss bar al entrar |
-| `bossbar.color` | `BLUE` | Color de la boss bar al entrar |
-| `bossbar.overlay` | `PROGRESS` | Superposición de la boss bar al entrar |
+| `tablist.header` | 2 líneas | Aún sin aplicar |
+| `tablist.footer` | 2 líneas | Aún sin aplicar |
+| `bossbar.duration-ticks` | `200` | Duración de la barra de entrada |
+| `bossbar.color` | `BLUE` | Color de la barra |
+| `bossbar.overlay` | `PROGRESS` | Estilo de la barra |
 
-## Estructura de datos
+## modules/debug/config.yml
 
-Todo se encuentra bajo la carpeta de datos del plugin `plugins/ZellysNexus/`:
+| Clave | Por defecto | Notas |
+|---|---|---|
+| `enabled` | `false` | Interruptor del módulo; requiere reinicio |
 
-- `config.yml`: configuración global, copiada del jar en la primera ejecución.
-- `modules/`: configuración por módulo; las plantillas de `auth`, `antibot`, `toolkit`,
-  `ban`, `join`, `chat`, `inventory`, `clans`, `itemedit` y `tab` se copian en el primer
-  arranque cuando faltan.
-- Archivos de datos de los módulos: `auth.yml`, `antibot.yml`, `clans.yml`,
-  `ban-audit.yml`, `join-stats.yml`, `spawn.yml`, `homes.yml`, `warps.yml`, `jails.yml`,
-  `kits.yml`, `mail.yml`, `jailed.yml`, `lastseen.yml`, `nicknames.yml` y `items.yml`.
-- `debug/`: informes de diagnóstico con fecha escritos por el módulo debug.
-- No se usa ninguna base de datos: cada almacén es un archivo YAML en UTF-8.
+## modules/integrations/config.yml
+
+| Clave | Por defecto | Notas |
+|---|---|---|
+| `enabled` | `false` | Interruptor del módulo; requiere reinicio |
+
+## modules/updater/config.yml
+
+| Clave | Por defecto | Notas |
+|---|---|---|
+| `enabled` | `false` | Interruptor del módulo; requiere reinicio; la comprobación la controla `updater.check-on-boot` |
+
+## Distribución de datos
+
+Todo vive en `plugins/ZellysNexus/`:
+
+- `config.yml`: configuración global, copiada del jar en el primer arranque.
+- `modules/<module>/config.yml`: una carpeta por módulo, copiada si falta. Las carpetas
+  son `auth`, `antibot`, `toolkit`, `ban`, `join`, `chat`, `inventory`, `clans`,
+  `itemedit`, `tab`, `integrations`, `updater` y `debug`.
+- Los datos de cada módulo viven en su carpeta: `modules/join/join-stats.yml`,
+  `modules/ban/ban-audit.yml`, `modules/auth/auth.yml`, `modules/clans/clans.yml`,
+  `modules/itemedit/items.yml`, `modules/antibot/antibot.yml` y, en
+  `modules/toolkit/`: `spawn.yml`, `homes.yml`, `warps.yml`, `jails.yml`, `kits.yml`,
+  `mail.yml`, `jailed.yml`, `lastseen.yml` y `nicknames.yml`.
+- El primer arranque de esta versión copia el archivo antiguo de la raíz a su carpeta,
+  verifica el tamaño y renombra el original a `<name>.migrated`. Nunca sobrescribe un
+  archivo nuevo; si existen los dos, avisa y usa el nuevo.
+- `debug/`: informes de diagnóstico con fecha.
+- No se usa base de datos: todo es YAML UTF-8.
 
 ## Archivos de idioma
 
-Las traducciones vienen dentro del jar y no son archivos de la carpeta de datos.
-`language` selecciona `en` o `es`; una clave que falta en el idioma activo recurre al
-inglés, y un idioma que no carga recurre por completo al inglés. `/zn reload` aplica los
-cambios de idioma de inmediato.
+Las traducciones viajan dentro del jar; no son archivos de la carpeta de datos.
+`language` elige `en` o `es`; una clave ausente cae a inglés y un idioma que no carga
+cae a inglés por completo. `/zn reload` aplica el idioma de inmediato.

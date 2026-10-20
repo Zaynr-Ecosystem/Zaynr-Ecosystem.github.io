@@ -1,25 +1,32 @@
 # Commands
 
 Every feature of Zelly's Nexus is reached through one root command, `/zn <module> <action>`.
-Each module also has a short alias. Running `/zn` or `/zn menu` opens the navigation dialog
-for players when dialogs are enabled in `config.yml`, and prints the module list otherwise.
+Each module also has a short alias. `/zn user` opens the player hub, `/zn admin` opens the
+admin hub (tier t1 and above), and `/zn recommended` applies the recommended setup.
+Screens use chest inventories by default; `use_dialogs: true` switches Java players to
+Paper dialogs, and Bedrock players get Floodgate forms when Floodgate is installed.
 `/zn help` lists the modules the sender can use.
 
 | Module | Route | Alias |
 |---|---|---|
 | Auth | `/zn auth` | `a` |
 | Antibot | `/zn antibot` | `ab` |
+| Ban | `/zn ban` | `b` |
 | Toolkit (teleportation, player, server, moderation, kits, items) | `/zn toolkit` | `tools` |
 | Chat | `/zn chat` | `c` |
 | Inventory | `/zn inventory` | `inv` |
 | Clans | `/zn clans` | `clan` |
 | ItemEdit | `/zn itemedit` | `ie` |
+| Join | `/zn join` | `j` |
 | Tab | `/zn tab` | `t` |
 | Integrations | `/zn integrations` | `int` |
+| Updater | `/zn updater` | `up` |
 | Debug | `/zn debug` | `dbg` |
 
-A module appears only when it is enabled under `modules` in `config.yml`. Every module is
-enabled by default except Debug.
+A module appears only when `enabled: true` in its own
+`modules/<module>/config.yml`. Every module starts disabled; a disabled module still
+registers its commands and answers with a message that names it and shows both ways out
+(edit its folder or run `/zn recommended <module>`).
 
 Angle brackets mark a required argument and square brackets mark an optional one.
 
@@ -68,6 +75,16 @@ grants `zn.antibot.admin`.
 plugin does not declare it, so it is held by operators and by anyone it is granted to
 explicitly.
 
+### Admin tiers
+
+With `admin_tiers.enabled: false` (the default) `zn.admin` grants every admin capability.
+With it set to `true`, the admin chain is `zn.admin.t1` (everyday moderation),
+`zn.admin.t2` (actions on other players and their items), `zn.admin.t3` (world and server
+settings) and `zn.admin.owner` (reload, stop and restart, recommended, permissions and
+integrations). Each tier also satisfies the lower ones. `zn.admin.custom` is opt-in for
+granular action nodes. Every click re-checks its node at click time in the inventory, the
+dialog and the Bedrock form; the admin hub lists only what the viewer's tier allows.
+
 ## Console
 
 The Console column states whether the console can run the command. "Yes (target required)"
@@ -98,9 +115,13 @@ These commands belong to the root command and are always available.
 
 | Command | Syntax | Description | Permission | Default | Console |
 |---|---|---|---|---|---|
-| `/zn` | `[menu]` | Opens the navigation dialog for players when dialogs are enabled, and lists the available modules otherwise. | none | Everyone | Yes (module list) |
-| none | none | Lists the modules the sender can use. | none | Everyone | Yes |
-| none | none | Reloads `config.yml`. The language applies at once to every command message, to the login gate and to every menu opened afterwards; a dialog that is already open, and the tab list header and footer until the next join or `/zn tab reload`, keep the old text. The dialogs setting applies at once. Changing a module toggle needs a server restart; the sender is told and a warning is logged. | `zn.admin` | Operators | Yes |
+| `/zn` | `[menu]` | Opens the player hub. | none | Everyone | Yes (module list) |
+| `/zn user` | none | Opens the player hub in every renderer. | none | Everyone | No |
+| `/zn admin` | none | Opens the admin hub with the sections the viewer's tier allows. | `zn.admin` | Operators | No |
+| `/zn menu` | `[inventory\|dialog\|auto]` | Compatibility override for one open only. The documented switch is `use_dialogs`. | none | Everyone | No |
+| `/zn recommended` | `<all\|config\|modules\|<module>> [force]` or `undo <same targets>` | Applies or undoes the recommended values. `all` is `config` plus `modules`; a module name applies only that module. A second run without `force` does nothing and says so. | `zn.admin.owner` | Operators | Yes |
+| `/zn help` | none | Lists the modules the sender can use. | none | Everyone | Yes |
+| `/zn reload` | none | Reloads `config.yml`. Language and renderer changes apply at once; a module switch needs a restart. | `zn.admin` | Operators | Yes |
 
 ## Auth
 

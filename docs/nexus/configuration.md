@@ -1,46 +1,62 @@
 # Configuration
 
-Global settings live in `config.yml` in the plugin data folder; per-module settings live
-in `modules/<module>.yml`. `/zn reload` applies language and dialog changes immediately;
-module toggles need a full server restart. Where a key is parsed but not yet consumed by
-its module, the table marks it as not applied yet.
+Global settings live in `config.yml`. Every module owns one folder,
+`modules/<module>/config.yml`, and starts with `enabled: false`. `/zn reload` applies
+language and renderer changes immediately; module switches need a full server restart.
+Where a key is parsed but not yet consumed by its module, the table marks it as not
+applied yet. The player hubs are `/zn user` and `/zn admin`; every screen in them uses
+the renderer chosen by `use_dialogs` and `bedrock_forms`.
 
 ## config.yml
 
 | Key | Default | Notes |
 |---|---|---|
-| `config-version` | `2` | Config schema version; upgraded automatically |
+| `config-version` | `3` | Config schema version; upgraded automatically |
 | `language` | `en` | Active translation: `en` or `es` |
-| `dialogs` | `true` | Native Paper dialogs; `false` falls back to the chat interface |
+| `use_dialogs` | `false` | Java players see Paper dialogs instead of chest inventories. Requires a Paper build with the Dialog API |
+| `bedrock_forms` | `true` | Bedrock players see Floodgate forms when Floodgate is installed |
+| `setup_notice` | `true` | Admins see the first-start notice until the recommended setup is applied or this key is false |
+| `apply_recommended_on_start` | `false` | Apply `recommended all` on the next start, then reset to false |
+| `admin_tiers.enabled` | `false` | Segment admin capabilities by tier. False means `zn.admin` grants every admin capability |
 | `commands.register-root-aliases` | `true` | Register the optional root shortcuts (`/spawn`, `/home`, `/login`, and more) |
 | `commands.disabled-root-aliases` | `[kill, kick, time, weather, msg, gamemode]` | Root command names that are never registered |
 | `updater.check-on-boot` | `true` | Run the update check on boot |
+| `recommended_config_applied` | absent | Marker written after `recommended config` succeeds |
+| `recommended_modules_applied` | absent | Marker written after `recommended modules` succeeds |
+| `recommended_<module>_applied` | absent | Marker written after `recommended <module>` succeeds |
 
-### Module toggles
+Inventories are the default renderer. `use_dialogs: true` switches Java players to
+dialogs; Bedrock players always get forms when Floodgate is present and
+`bedrock_forms` is true. The old `dialogs` and `gui-mode` keys are migrated to
+`use_dialogs` and removed on the first start of this version.
+
+### Module switches
 
 | Key | Default |
 |---|---|
-| `modules.auth.enabled` | `true` |
-| `modules.antibot.enabled` | `true` |
-| `modules.toolkit.enabled` | `true` |
-| `modules.ban.enabled` | `true` |
-| `modules.join.enabled` | `true` |
-| `modules.chat.enabled` | `true` |
-| `modules.inventory.enabled` | `true` |
-| `modules.clans.enabled` | `true` |
-| `modules.itemedit.enabled` | `true` |
-| `modules.tab.enabled` | `true` |
-| `modules.integrations.enabled` | `true` |
-| `modules.updater.enabled` | `true` |
-| `modules.debug.enabled` | `false` |
+| `enabled` in `modules/auth/config.yml` | `false` |
+| `enabled` in `modules/antibot/config.yml` | `false` |
+| `enabled` in `modules/toolkit/config.yml` | `false` |
+| `enabled` in `modules/ban/config.yml` | `false` |
+| `enabled` in `modules/join/config.yml` | `false` |
+| `enabled` in `modules/chat/config.yml` | `false` |
+| `enabled` in `modules/inventory/config.yml` | `false` |
+| `enabled` in `modules/clans/config.yml` | `false` |
+| `enabled` in `modules/itemedit/config.yml` | `false` |
+| `enabled` in `modules/tab/config.yml` | `false` |
+| `enabled` in `modules/integrations/config.yml` | `false` |
+| `enabled` in `modules/updater/config.yml` | `false` |
+| `enabled` in `modules/debug/config.yml` | `false` |
 
-Toggles take effect only after a full server restart. Unknown module names default to
-enabled, and `debug` defaults to disabled.
+Switches take effect only after a full server restart. A disabled module still
+registers its commands; using one explains that the module is disabled and shows both
+ways out (edit its folder or run `/zn recommended <module>`).
 
-## modules/auth.yml
+## modules/auth/config.yml
 
 | Key | Default | Notes |
 |---|---|---|
+| `enabled` | `false` | Module switch; requires a restart |
 | `session-hours` | `12` | Session memory duration |
 | `max-accounts-per-ip` | `3` | Account limit per address |
 | `min-password-length` | `4` | Minimum password length |
@@ -60,10 +76,11 @@ enabled, and `debug` defaults to disabled.
 | `mojang.timeout-seconds` | `4` | Premium verification timeout |
 | `mojang.cache-seconds` | `3600` | Premium verification cache |
 
-## modules/antibot.yml
+## modules/antibot/config.yml
 
 | Key | Default | Notes |
 |---|---|---|
+| `enabled` | `false` | Module switch; requires a restart |
 | `window-seconds` | `10` | Rate-limit window per address |
 | `max-joins-per-window` | `4` | Connections allowed per window |
 | `attack-mode.auto-enable` | `true` | Not applied yet |
@@ -72,10 +89,11 @@ enabled, and `debug` defaults to disabled.
 | `checks.require-ping` | `false` | Not applied yet |
 | `checks.alert-staff` | `true` | Not applied yet |
 
-## modules/toolkit.yml
+## modules/toolkit/config.yml
 
 | Key | Default | Notes |
 |---|---|---|
+| `enabled` | `false` | Module switch; requires a restart |
 | `near-radius` | `100` | Radius of the "near" player list |
 | `burn-ticks` | `100` | Burn duration applied by the burn action |
 | `tpa-timeout-seconds` | `120` | Teleport request timeout |
@@ -83,7 +101,6 @@ enabled, and `debug` defaults to disabled.
 | `teleport.cancel-on-move` | `true` | Not applied yet |
 | `teleport.cancel-on-damage` | `true` | Not applied yet |
 | `homes.default-max-homes` | `3` | Not applied yet |
-| `homes.bed-sets-home` | `false` | Not applied yet |
 | `spawn.on-first-join` | `true` | Not applied yet |
 | `spawn.on-death` | `false` | Not applied yet |
 | `back.save-on-death` | `true` | Not applied yet |
@@ -91,15 +108,12 @@ enabled, and `debug` defaults to disabled.
 | `rtp.rtp-min` | `-1000` | Not applied yet; the range is changed at runtime with `/settpr` |
 | `rtp.rtp-max` | `1000` | Not applied yet; the range is changed at runtime with `/settpr` |
 | `rtp.cooldown-seconds` | `60` | Not applied yet |
-| `rtp.avoid-water` | `true` | Not applied yet |
-| `rtp.avoid-lava` | `true` | Not applied yet |
-| `pranks.enabled` | `true` | Not applied yet |
-| `pranks.level-1` to `pranks.level-6` | policy text | Not applied yet |
 
-## modules/ban.yml
+## modules/ban/config.yml
 
 | Key | Default | Notes |
 |---|---|---|
+| `enabled` | `false` | Module switch; requires a restart |
 | `server-name` | `"the server"` | Name shown on the ban, kick and suspend screens |
 | `default-suspend-duration` | `"7d"` | Duration applied by `/zn suspend` when none is given (`s`, `m`, `h`, `d`, `w` or `perm`) |
 | `screens` | `true` | Render the ban, kick and suspend screens on login refusal and kicks |
@@ -108,19 +122,42 @@ enabled, and `debug` defaults to disabled.
 | `appeal-url` | docs site | Link shown on the screens |
 | `store-url` | docs site | Link shown on the screens |
 
-## modules/join.yml
+## modules/join/config.yml
 
 | Key | Default | Notes |
 |---|---|---|
-| `title-fade` | `10 / 80 / 10` ticks | Default title fade-in, stay and fade-out |
+| `enabled` | `false` | Module switch; requires a restart |
+| `title-fade.fade-in` | `10` | Title fade-in in ticks |
+| `title-fade.stay` | `80` | Title stay in ticks |
+| `title-fade.fade-out` | `10` | Title fade-out in ticks |
 | `chat.enabled` | `true` | First-join, join and quit chat messages |
-| `chat.public.<event>` / `chat.private.<event>` | entries | Public goes to every online player, private only to the player |
+| `chat.public.first-join` | 1 entry | Public chat message list for `first-join` |
+| `chat.public.join` | 1 entry | Public chat message list for `join` |
+| `chat.public.quit` | 1 entry | Public chat message list for `quit` |
+| `chat.private.first-join` | `[]` | Private chat message list for `first-join` |
+| `chat.private.join` | `[]` | Private chat message list for `join` |
+| `chat.private.quit` | `[]` | Private chat message list for `quit` |
 | `title.enabled` | `false` | Screen titles |
-| `title.public.<event>` / `title.private.<event>` | entries | Title and subtitle entries |
+| `title.public.first-join` | `[]` | Public title list for `first-join` |
+| `title.public.join` | `[]` | Public title list for `join` |
+| `title.public.quit` | `[]` | Public title list for `quit` |
+| `title.private.first-join` | `[]` | Private title list for `first-join` |
+| `title.private.join` | `[]` | Private title list for `join` |
+| `title.private.quit` | `[]` | Private title list for `quit` |
 | `actionbar.enabled` | `false` | Action-bar lines |
-| `actionbar.public.<event>` / `actionbar.private.<event>` | entries | Single-line entries |
+| `actionbar.public.first-join` | `[]` | Public action-bar list for `first-join` |
+| `actionbar.public.join` | `[]` | Public action-bar list for `join` |
+| `actionbar.public.quit` | `[]` | Public action-bar list for `quit` |
+| `actionbar.private.first-join` | `[]` | Private action-bar list for `first-join` |
+| `actionbar.private.join` | `[]` | Private action-bar list for `join` |
+| `actionbar.private.quit` | `[]` | Private action-bar list for `quit` |
 | `sound.enabled` | `false` | Join and quit sounds |
-| `sound.public.<event>` / `sound.private.<event>` | entries | Sound entries |
+| `sound.public.first-join` | `[]` | Public sound list for `first-join` |
+| `sound.public.join` | `[]` | Public sound list for `join` |
+| `sound.public.quit` | `[]` | Public sound list for `quit` |
+| `sound.private.first-join` | `[]` | Private sound list for `first-join` |
+| `sound.private.join` | `[]` | Private sound list for `join` |
+| `sound.private.quit` | `[]` | Private sound list for `quit` |
 
 `<event>` is `first-join`, `join` or `quit`. Every entry sets a `priority` and can set
 an optional `permission`; message entries use `messages` (a list), title entries use
@@ -128,13 +165,13 @@ an optional `permission`; message entries use `messages` (a list), title entries
 Placeholders: `<player>`, `<displayname>`, `<world>`, `<online>` and `<uniquejoins>`
 (the counter kept in `join-stats.yml`).
 
-## modules/chat.yml
+## modules/chat/config.yml
 
 ### Channels
 
 | Key | Default | Notes |
 |---|---|---|
-| `enabled` | `true` | Not applied yet; use `modules.chat.enabled` |
+| `enabled` | `false` | Module switch; requires a restart |
 | `channels.default-channel` | `local` | Default channel for players |
 | `channels.local-radius` | `100` | Radius of local chat |
 | `channels.shout-prefix` | `!` | Prefix that sends a message to the whole server |
@@ -158,6 +195,12 @@ Placeholders: `<player>`, `<displayname>`, `<world>`, `<online>` and `<uniquejoi
 | `formatting.groups.mod.local-format` / `global-format` | mod formats | Mod group formats |
 | `formatting.groups.vip.priority` / `permission` | `50` / `zn.chat.group.vip` | VIP group |
 | `formatting.groups.vip.local-format` / `global-format` | vip formats | VIP group formats |
+| `formatting.groups.admin.global-format` | admin global format | Admin global chat format |
+| `formatting.groups.admin.player-click.value` | `/msg <player> ` | Admin click action value |
+| `formatting.groups.mod.permission` | `zn.chat.group.mod` | Mod group permission |
+| `formatting.groups.mod.global-format` | mod global format | Mod global chat format |
+| `formatting.groups.vip.permission` | `zn.chat.group.vip` | VIP group permission |
+| `formatting.groups.vip.global-format` | vip global format | VIP global chat format |
 
 ### Placeholders
 
@@ -211,10 +254,11 @@ Placeholders: `<player>`, `<displayname>`, `<world>`, `<online>` and `<uniquejoi
 | `announcements.prefix` | Nexus prefix | Announcement prefix |
 | `announcements.messages` | 3 lines | Rotating messages |
 
-## modules/clans.yml
+## modules/clans/config.yml
 
 | Key | Default | Notes |
 |---|---|---|
+| `enabled` | `false` | Module switch; requires a restart |
 | `invite-seconds` | `120` | Invitation validity |
 | `naming.min-name-length` | `3` | Not applied yet |
 | `naming.max-name-length` | `32` | Maximum clan name length |
@@ -226,23 +270,25 @@ Placeholders: `<player>`, `<displayname>`, `<world>`, `<online>` and `<uniquejoi
 | `gameplay.max-allies` | `3` | Not applied yet |
 | `gameplay.max-rivals` | `5` | Not applied yet |
 
-## modules/inventory.yml
+## modules/inventory/config.yml
 
-The inventory module has no settings file in the data folder; it runs on these built-in
-defaults, and none of them are applied yet.
+The inventory module uses `modules/inventory/config.yml`; none of these keys are
+applied yet.
 
 | Key | Default | Notes |
 |---|---|---|
+| `enabled` | `false` | Module switch; requires a restart |
 | `rollback.save-on-death` | `true` | Not applied yet |
 | `rollback.save-on-disconnect` | `true` | Not applied yet |
 | `rollback.max-snapshots-per-player` | `20` | Not applied yet |
 | `rollback.retention-days` | `7` | Not applied yet |
 | `inspector.allow-modification` | `true` | Not applied yet |
 
-## modules/itemedit.yml
+## modules/itemedit/config.yml
 
 | Key | Default | Notes |
 |---|---|---|
+| `enabled` | `false` | Module switch; requires a restart |
 | `lore-lines` | `8` | Maximum lore lines |
 | `limits.max-name-length` | `64` | Not applied yet |
 | `limits.max-lore-line-length` | `128` | Not applied yet |
@@ -250,10 +296,11 @@ defaults, and none of them are applied yet.
 | `formatting.allow-minimessage` | `true` | Not applied yet |
 | `economy.repair-cost` | `0` | Not applied yet |
 
-## modules/tab.yml
+## modules/tab/config.yml
 
 | Key | Default | Notes |
 |---|---|---|
+| `enabled` | `false` | Module switch; requires a restart |
 | `tablist.enabled` | `true` | Not applied yet; use `modules.tab.enabled` |
 | `tablist.update-interval-ticks` | `20` | Not applied yet |
 | `tablist.colorize-ping` | `true` | Not applied yet |
@@ -263,17 +310,40 @@ defaults, and none of them are applied yet.
 | `bossbar.color` | `BLUE` | Join boss bar color |
 | `bossbar.overlay` | `PROGRESS` | Join boss bar overlay |
 
+## modules/debug/config.yml
+
+| Key | Default | Notes |
+|---|---|---|
+| `enabled` | `false` | Module switch; requires a restart. Hidden commands stay registered |
+
+## modules/integrations/config.yml
+
+| Key | Default | Notes |
+|---|---|---|
+| `enabled` | `false` | Module switch; requires a restart. Integration detection runs at boot |
+
+## modules/updater/config.yml
+
+| Key | Default | Notes |
+|---|---|---|
+| `enabled` | `false` | Module switch; requires a restart. The update check is controlled by `updater.check-on-boot` |
+
 ## Data layout
 
 Everything lives under the plugin data folder `plugins/ZellysNexus/`:
 
 - `config.yml`: global settings, copied from the jar on first run.
-- `modules/`: per-module settings; the templates for `auth`, `antibot`, `toolkit`,
-  `ban`, `join`, `chat`, `inventory`, `clans`, `itemedit`, and `tab` are copied on
-  first start when missing.
-- Module data files: `auth.yml`, `antibot.yml`, `clans.yml`, `ban-audit.yml`,
-  `join-stats.yml`, `spawn.yml`, `homes.yml`, `warps.yml`, `jails.yml`, `kits.yml`,
-  `mail.yml`, `jailed.yml`, `lastseen.yml`, `nicknames.yml`, and `items.yml`.
+- `modules/<module>/config.yml`: one folder per module, copied on first start when
+  missing. The folders are `auth`, `antibot`, `toolkit`, `ban`, `join`, `chat`,
+  `inventory`, `clans`, `itemedit`, `tab`, `integrations`, `updater` and `debug`.
+- Module data files now live in the same folder as their module: `modules/join/join-stats.yml`,
+  `modules/ban/ban-audit.yml`, `modules/auth/auth.yml`, `modules/clans/clans.yml`,
+  `modules/itemedit/items.yml`, `modules/antibot/antibot.yml`, and under
+  `modules/toolkit/`: `spawn.yml`, `homes.yml`, `warps.yml`, `jails.yml`, `kits.yml`,
+  `mail.yml`, `jailed.yml`, `lastseen.yml` and `nicknames.yml`.
+- The first start of this version copies a legacy root data file into its module
+  folder, verifies the size, and renames the old file to `<name>.migrated`. It never
+  overwrites an existing new file; when both exist, it warns and uses the new one.
 - `debug/`: dated diagnostic reports written by the debug module.
 - No database is used: every store is a UTF-8 YAML file.
 

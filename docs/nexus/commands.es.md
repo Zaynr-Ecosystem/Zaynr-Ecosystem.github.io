@@ -1,21 +1,27 @@
 # Comandos
 
-Se accede a todas las funciones de Zelly's Nexus mediante un único comando raíz, `/zn <module> <action>`. Cada módulo también tiene un alias corto. Ejecutar `/zn` o `/zn menu` abre el diálogo de navegación para los jugadores cuando los diálogos están habilitados en `config.yml`, y en caso contrario imprime la lista de módulos. `/zn help` lista los módulos que el remitente puede usar.
+Se accede a todas las funciones de Zelly's Nexus mediante un único comando raíz, `/zn <module> <action>`. Cada módulo también tiene un alias corto. `/zn user` abre el hub del jugador, `/zn admin` abre el hub de administración (nivel t1 o superior) y `/zn recommended` aplica la configuración recomendada. Las pantallas usan inventarios por defecto; `use_dialogs: true` cambia a los jugadores de Java a diálogos de Paper, y los de Bedrock reciben formularios de Floodgate cuando está instalado. `/zn help` lista los módulos que el remitente puede usar.
 
 | Módulo | Ruta | Alias |
 |---|---|---|
 | Auth | `/zn auth` | `a` |
 | Antibot | `/zn antibot` | `ab` |
+| Ban | `/zn ban` | `b` |
 | Toolkit (teletransporte, jugador, servidor, moderación, kits, ítems) | `/zn toolkit` | `tools` |
 | Chat | `/zn chat` | `c` |
 | Inventory | `/zn inventory` | `inv` |
 | Clans | `/zn clans` | `clan` |
 | ItemEdit | `/zn itemedit` | `ie` |
+| Join | `/zn join` | `j` |
 | Tab | `/zn tab` | `t` |
 | Integrations | `/zn integrations` | `int` |
+| Updater | `/zn updater` | `up` |
 | Debug | `/zn debug` | `dbg` |
 
-Un módulo aparece solo cuando está habilitado bajo `modules` en `config.yml`. Todos los módulos están habilitados por defecto excepto Debug.
+Un módulo aparece solo cuando `enabled: true` en su propio
+`modules/<module>/config.yml`. Todos empiezan desactivados; un módulo desactivado sigue
+registrando sus comandos y responde con un mensaje que lo nombra y muestra las dos
+salidas (editar su carpeta o ejecutar `/zn recommended <module>`).
 
 Los paréntesis angulares marcan un argumento obligatorio y los corchetes marcan uno opcional.
 
@@ -44,6 +50,17 @@ Otros nodos heredados: `zellysnexus.itemedit` concede `zn.itemedit.admin`, y `zn
 
 `zn.admin` también lo comprueban `/zn reload` y las acciones administrativas de Clans. El plugin no lo declara, por lo que lo tienen los operadores y cualquier persona a la que se le conceda explícitamente.
 
+### Niveles de administración
+
+Con `admin_tiers.enabled: false` (por defecto) `zn.admin` concede todas las capacidades
+de administración. Con `true`, la cadena es `zn.admin.t1` (moderación diaria),
+`zn.admin.t2` (acciones sobre otros jugadores y sus objetos), `zn.admin.t3` (ajustes del
+mundo y del servidor) y `zn.admin.owner` (recarga, parada y reinicio, recommended,
+permisos e integraciones). Cada nivel también satisface a los inferiores.
+`zn.admin.custom` es opcional para nodos de acción concretos. Cada clic vuelve a
+comprobar su nodo en el inventario, el diálogo y el formulario de Bedrock; el hub de
+administración solo lista lo que permite el nivel del espectador.
+
 ## Consola
 
 La columna Consola indica si la consola puede ejecutar el comando. "Sí (objetivo obligatorio)" significa que la consola debe indicar un jugador objetivo. Los comandos marcados con "No" deben ser ejecutados por un jugador.
@@ -62,9 +79,13 @@ Estos comandos pertenecen al comando raíz y están siempre disponibles.
 
 | Comando | Sintaxis | Descripción | Permiso | Por defecto | Consola |
 |---|---|---|---|---|---|
-| `/zn` | `[menu]` | Abre el diálogo de navegación para los jugadores cuando los diálogos están habilitados, y en caso contrario lista los módulos disponibles. | Ninguno | Todos | Sí (lista de módulos) |
-| Ninguno | Ninguno | Lista los módulos que el remitente puede usar. | Ninguno | Todos | Sí |
-| Ninguno | Ninguno | Recarga `config.yml`. El idioma se aplica de inmediato a todos los mensajes de los comandos, al bloqueo previo al inicio de sesión y a todos los menús que se abran después; un diálogo que ya esté abierto, y el encabezado y el pie de la tablist hasta la siguiente conexión o `/zn tab reload`, mantienen el texto antiguo. La opción de diálogos se aplica de inmediato. Cambiar la habilitación de un módulo necesita un reinicio del servidor; se informa al remitente y se registra una advertencia. | `zn.admin` | Operadores | Sí |
+| `/zn` | `[menu]` | Abre el hub del jugador. | Ninguno | Todos | Sí (lista de módulos) |
+| `/zn user` | Ninguno | Abre el hub del jugador en todos los renderizadores. | Ninguno | Todos | No |
+| `/zn admin` | Ninguno | Abre el hub de administración con las secciones que permite el nivel del espectador. | `zn.admin` | Operadores | No |
+| `/zn menu` | `[inventory\|dialog\|auto]` | Anulación de compatibilidad para una apertura. La opción documentada es `use_dialogs`. | Ninguno | Todos | No |
+| `/zn recommended` | `<all\|config\|modules\|<module>> [force]` o `undo <mismos objetivos>` | Aplica o deshace los valores recomendados. `all` es `config` más `modules`; un nombre de módulo aplica solo ese módulo. Una segunda ejecución sin `force` no hace nada y lo indica. | `zn.admin.owner` | Operadores | Sí |
+| `/zn help` | Ninguno | Lista los módulos que el remitente puede usar. | Ninguno | Todos | Sí |
+| `/zn reload` | Ninguno | Recarga `config.yml`. El idioma y el renderizador se aplican de inmediato; un interruptor de módulo necesita reinicio. | `zn.admin` | Operadores | Sí |
 
 ## Auth
 

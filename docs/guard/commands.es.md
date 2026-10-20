@@ -13,7 +13,9 @@ subcomandos que el emisor tiene permitido usar.
 
 | Comando | Alias | Permiso | Solo jugadores | Descripción |
 |---|---|---|---|---|
-| `/zg admin` | | `zguard.admin.t1` | sí | Abre el diálogo del centro de administración |
+| `/zg user` | | `zguard.user` | sí | Abre el hub del jugador en el renderizador configurado |
+| `/zg admin` | | `zguard.admin.t1` | sí | Abre el hub de administración con las secciones que permite el nivel |
+| `/zg recommended` | | `zguard.admin.owner` | no | `<all\|config\|modules\|<module>> [force]` aplica los valores recomendados; `undo <target>` los restaura |
 | `/zg help` | | `zguard.user` | no | Enumera todos los subcomandos que el emisor puede usar |
 | `/zg reload` | | `zguard.admin.owner` | no | Recarga la configuración y las traducciones, informando del tiempo transcurrido |
 | `/zg about` | | `zguard.user` | no | Diálogo de información para jugadores cuando los diálogos están activos; de lo contrario, líneas de versión y lema |
@@ -29,6 +31,16 @@ subcomandos que el emisor tiene permitido usar.
 | `/zg log` | `/zg logs` | `zguard.admin.t1` | no | Registro de acciones: `inspect`, `lookup`, `rollback` |
 | `/zg antixray` | `/zg xray` | `zguard.admin.t1` | no | Imprime la línea del informe de sospecha de minería |
 | `/zg debug` | | `zguard.admin.t3` | no | Ejecuta la suite de diagnósticos |
+
+## Niveles de administración
+
+Con `admin_tiers.enabled: false` (por defecto) `zguard.admin` concede todas las
+capacidades de administración. Con `true`, la cadena es `zguard.admin.t1` (moderación
+diaria), `zguard.admin.t2` (acciones sobre otros jugadores y sus objetos),
+`zguard.admin.t3` (ajustes del mundo y del servidor) y `zguard.admin.owner` (recarga,
+recommended, permisos e integraciones). Cada nivel satisface a los inferiores;
+`zguard.admin.custom` es opcional. Cada clic vuelve a comprobar su nodo en el inventario,
+el diálogo y el formulario de Bedrock.
 
 ## Detalles de los comandos
 

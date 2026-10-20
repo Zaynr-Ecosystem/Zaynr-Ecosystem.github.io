@@ -13,7 +13,9 @@ to use.
 
 | Command | Aliases | Permission | Player only | Description |
 |---|---|---|---|---|
-| `/zg admin` | | `zguard.admin.t1` | yes | Opens the admin hub dialog |
+| `/zg user` | | `zguard.user` | yes | Opens the player hub in the configured renderer |
+| `/zg admin` | | `zguard.admin.t1` | yes | Opens the admin hub with the sections the viewer's tier allows |
+| `/zg recommended` | | `zguard.admin.owner` | no | `<all\|config\|modules\|<module>> [force]` applies the recommended values; `undo <target>` restores them |
 | `/zg help` | | `zguard.user` | no | Lists every subcommand the sender can use |
 | `/zg reload` | | `zguard.admin.owner` | no | Reloads configuration and translations, reporting the elapsed time |
 | `/zg about` | | `zguard.user` | no | About dialog for players when dialogs are on; otherwise version and tagline lines |
@@ -29,6 +31,16 @@ to use.
 | `/zg log` | `/zg logs` | `zguard.admin.t1` | no | Action logging: `inspect`, `lookup`, `rollback` |
 | `/zg antixray` | `/zg xray` | `zguard.admin.t1` | no | Prints the mining suspicion report line |
 | `/zg debug` | | `zguard.admin.t3` | no | Runs the diagnostics suite |
+
+## Admin tiers
+
+With `admin_tiers.enabled: false` (the default) `zguard.admin` grants every admin
+capability. With it set to `true`, the chain is `zguard.admin.t1` (everyday moderation),
+`zguard.admin.t2` (actions on other players and their items), `zguard.admin.t3` (world and
+server settings) and `zguard.admin.owner` (reload, recommended, permissions and
+integrations). Each tier also satisfies the lower ones; `zguard.admin.custom` is opt-in.
+Every click re-checks its node at click time in the inventory, the dialog and the Bedrock
+form.
 
 ## Command details
 
