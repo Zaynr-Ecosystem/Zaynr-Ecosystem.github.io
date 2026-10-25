@@ -1,0 +1,249 @@
+/* Copyright (c) 2026 Zar - Zaynr-Ecosystem */
+
+/* Modern Slate & Charcoal Theme with Celeste Accent:
+   Soft slate-white in light mode, comfortable dark slate-gray in dark mode
+   with subtle ambient lighting and micro-dot grid background texture. */
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap");
+
+:root {
+  --md-text-font: "Inter";
+  --md-code-font: "JetBrains Mono";
+}
+
+/* -- Palette ------------------------------------------------------ */
+
+[data-md-color-scheme="default"] {
+  --md-primary-fg-color: #0f172a;
+  --md-primary-fg-color--light: #1e293b;
+  --md-primary-fg-color--dark: #020617;
+  --md-primary-bg-color: #ffffff;
+  --md-primary-bg-color--light: #f8fafc;
+  --md-accent-fg-color: #0284c7;
+  --md-accent-fg-color--transparent: rgba(2, 132, 199, 0.1);
+  --md-typeset-a-color: #0284c7;
+  --md-default-bg-color: #f8fafc;
+  --md-default-fg-color: #0f172a;
+  --md-default-fg-color--light: rgba(15, 23, 42, 0.72);
+  --md-default-fg-color--lighter: rgba(15, 23, 42, 0.45);
+  --md-default-fg-color--lightest: rgba(15, 23, 42, 0.06);
+  --md-code-bg-color: #f1f5f9;
+  --md-code-fg-color: #0f172a;
+}
+
+[data-md-color-scheme="slate"] {
+  --md-hue: 205;
+  --md-primary-fg-color: #131722;
+  --md-primary-fg-color--light: #1b202e;
+  --md-primary-fg-color--dark: #0e111a;
+  --md-primary-bg-color: #ffffff;
+  --md-primary-bg-color--light: #cbd5e1;
+  --md-accent-fg-color: #38bdf8;
+  --md-accent-fg-color--transparent: rgba(56, 189, 248, 0.12);
+  --md-typeset-a-color: #38bdf8;
+  --md-default-bg-color: #161a24;
+  --md-default-fg-color: #f1f5f9;
+  --md-default-fg-color--light: rgba(241, 245, 249, 0.72);
+  --md-default-fg-color--lighter: rgba(241, 245, 249, 0.45);
+  --md-default-fg-color--lightest: rgba(241, 245, 249, 0.06);
+  --md-code-bg-color: #1c212f;
+  --md-code-fg-color: #e2e8f0;
+}
+
+/* -- Background Texture and Depth --------------------------------- */
+
+[data-md-color-scheme="slate"] body {
+  background-color: var(--md-default-bg-color);
+  background-image:
+    radial-gradient(ellipse 80% 500px at 50% -120px, rgba(56, 189, 248, 0.12), transparent 70%),
+    radial-gradient(rgba(56, 189, 248, 0.06) 1px, transparent 1px);
+  background-size: 100% 100%, 28px 28px;
+  background-attachment: fixed;
+}
+
+[data-md-color-scheme="default"] body {
+  background-color: var(--md-default-bg-color);
+  background-image:
+    radial-gradient(ellipse 80% 450px at 50% -100px, rgba(2, 132, 199, 0.07), transparent 70%),
+    radial-gradient(rgba(2, 132, 199, 0.05) 1px, transparent 1px);
+  background-size: 100% 100%, 28px 28px;
+  background-attachment: fixed;
+}
+
+/* -- Typography --------------------------------------------------- */
+
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3,
+.md-typeset h4 {
+  font-family: "Plus Jakarta Sans", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.md-typeset h1 {
+  color: var(--md-default-fg-color);
+}
+
+/* -- Components --------------------------------------------------- */
+
+::selection {
+  background: rgba(56, 189, 248, 0.28);
+}
+
+.md-header {
+  border-bottom: 0.05rem solid rgba(56, 189, 248, 0.22);
+}
+
+.md-typeset blockquote {
+  border-left-color: var(--md-accent-fg-color);
+  border-inline-start-color: var(--md-accent-fg-color);
+}
+
+.md-typeset .admonition,
+.md-typeset details {
+  border-radius: 0.4rem;
+}
+
+[data-md-color-scheme="slate"] .md-typeset .admonition {
+  background-color: rgba(22, 26, 36, 0.7);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.md-typeset pre > code {
+  border-radius: 0.4rem;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+[data-md-color-scheme="default"] .md-typeset table:not([class]) {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+[data-md-color-scheme="default"] .md-typeset table:not([class]) th {
+  background-color: rgba(2, 132, 199, 0.06);
+}
+
+[data-md-color-scheme="slate"] .md-typeset table:not([class]) {
+  background-color: rgba(22, 26, 36, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+[data-md-color-scheme="slate"] .md-typeset table:not([class]) th {
+  background-color: rgba(56, 189, 248, 0.09);
+  border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+}
+
+[data-md-color-scheme="slate"] .md-typeset table:not([class]) tr:nth-child(2n) {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+.md-typeset .grid.cards svg {
+  color: var(--md-accent-fg-color);
+}
+
+.md-typeset .grid.cards > ul > li,
+.md-typeset .grid.cards > li {
+  border-radius: 0.5rem;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.18s ease;
+}
+
+[data-md-color-scheme="default"] .md-typeset .grid.cards > ul > li,
+[data-md-color-scheme="default"] .md-typeset .grid.cards > li {
+  border: 1px solid #e2e8f0;
+  background-color: #ffffff;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+}
+
+[data-md-color-scheme="slate"] .md-typeset .grid.cards > ul > li,
+[data-md-color-scheme="slate"] .md-typeset .grid.cards > li {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02) 0%, rgba(19, 23, 33, 0.85) 100%), #1a1e29;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+}
+
+.md-typeset .grid.cards > ul > li:hover,
+.md-typeset .grid.cards > li:hover {
+  border-color: var(--md-accent-fg-color);
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.35),
+    0 0 16px rgba(56, 189, 248, 0.2);
+  transform: translateY(-0.12rem);
+}
+
+[data-md-color-scheme="default"] .md-typeset .grid.cards > ul > li:hover,
+[data-md-color-scheme="default"] .md-typeset .grid.cards > li:hover {
+  border-color: var(--md-accent-fg-color);
+  box-shadow: 0 0.35rem 1rem rgba(2, 132, 199, 0.15);
+}
+
+/* -- Banner Graphic ----------------------------------------------- */
+
+.hk4-banner-container {
+  text-align: center;
+  margin: 1.5rem auto 2.5rem auto;
+  padding: 1.75rem 1.5rem;
+  max-width: 680px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(56, 189, 248, 0.06) 0%, rgba(18, 22, 31, 0.7) 100%);
+  border: 1px solid rgba(56, 189, 248, 0.22);
+  box-shadow:
+    0 12px 36px -8px rgba(0, 0, 0, 0.45),
+    0 0 24px rgba(56, 189, 248, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+[data-md-color-scheme="default"] .hk4-banner-container {
+  background: linear-gradient(180deg, rgba(2, 132, 199, 0.04) 0%, rgba(248, 250, 252, 0.9) 100%);
+  border: 1px solid rgba(2, 132, 199, 0.18);
+  box-shadow:
+    0 10px 30px -8px rgba(2, 132, 199, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.hk4-banner {
+  max-width: 500px;
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.45));
+  border-radius: 6px;
+  transition: transform 0.25s ease, filter 0.25s ease;
+}
+
+.hk4-banner-container:hover .hk4-banner {
+  transform: scale(1.015);
+  filter: drop-shadow(0 8px 24px rgba(56, 189, 248, 0.35));
+}
+
+/* -- Home page layout --------------------------------------------- */
+
+.md-typeset .grid.cards.two-up,
+.md-typeset .grid.cards.two-up > ul {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.md-typeset .grid.cards.centered,
+.md-typeset .grid.cards.centered > ul {
+  grid-template-columns: minmax(0, 32rem);
+  justify-content: center;
+}
+
+@media screen and (max-width: 44.984375em) {
+  .md-typeset .grid.cards.two-up,
+  .md-typeset .grid.cards.two-up > ul,
+  .md-typeset .grid.cards.centered,
+  .md-typeset .grid.cards.centered > ul {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
